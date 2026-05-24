@@ -102,7 +102,7 @@ export const projects = [
     description:
       'A banking churn prediction study using engineered behavioral features, imbalance handling, model evaluation, and a Streamlit dashboard.',
     tech: ['Python', 'Scikit-learn', 'XGBoost', 'Streamlit'],
-    repo: 'https://github.com/Aditya181-del/Banking-Customer-Churn-ML-Ops',
+    repo: 'https://github.com/Aditya181-del/Final-Year-Project-',
     signal: 'AUC 0.87 and F1-score 0.63',
   },
   {
@@ -111,7 +111,7 @@ export const projects = [
     description:
       'Retail performance analysis using optimized SQL queries, joins, subqueries, aggregations, rollups, stored procedures, and UDFs.',
     tech: ['SQL', 'MySQL', 'BI', 'KPI reporting'],
-    repo: 'https://github.com/Aditya181-del',
+    repo: 'https://github.com/Aditya181-del/SQL-case-study-1',
     signal: '25+ optimized business queries',
   },
   {
@@ -120,7 +120,7 @@ export const projects = [
     description:
       'A 62-year analysis of monthly commodity prices to identify long-term market trends, correlations, seasonality, anomalies, and macroeconomic event impact.',
     tech: ['Python', 'Time series', 'Visualization', 'Analytics'],
-    repo: 'https://github.com/Aditya181-del',
+    repo: 'https://github.com/Aditya181-del/Data-analysis-case-study-',
     signal: '1960-2022 macro trend study',
   },
   {
@@ -129,7 +129,7 @@ export const projects = [
     description:
       'A collection of data cleaning, exploratory analysis, visualization, and reporting work from the Cognifyz analytics internship track.',
     tech: ['Python', 'SQL', 'Power BI', 'Reports'],
-    repo: 'https://github.com/Aditya181-del/Data-Analysis-Internship-at-Cognifyz-Technologies',
+    repo: 'https://github.com/Aditya181-del/Data-Analysis-Internship-at-Cognifyz-Technologies-',
     signal: 'Business insights from real datasets',
   },
 ];
