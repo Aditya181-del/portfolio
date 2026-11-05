@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f7f2">
+<title>Lexi — Voice Vocabulary Coach</title>
+<meta name="description" content="A voice-first vocabulary practice prototype. Learn useful words, hear pronunciation, and practice speaking with Lexi.">
+<style>
+:root{--ink:#17211d;--muted:#77817b;--paper:#f7f7f2;--card:#fff;--line:#e8ebe5;--green:#b8ef72;--deep:#203c31;--deep2:#2d5142;--coral:#ee8a70;--gold:#f2c66d;--shadow:0 16px 45px rgba(25,43,34,.07);--radius:22px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}
+button,input{font:inherit}
+button{cursor:pointer}
+.shell{max-width:1240px;margin:auto;padding:26px 34px 50px}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:36px}
+.brand{display:flex;align-items:center;gap:11px;font-size:16px;font-weight:850;letter-spacing:-.04em}
+.mark{width:36px;height:36px;border-radius:12px;background:var(--deep);display:grid;place-items:center;color:var(--green);font-size:18px;font-weight:900}
+.brand small{display:block;font-size:10px;letter-spacing:.13em;color:var(--muted);font-weight:700;margin-top:-3px}
+.top-right{display:flex;align-items:center;gap:12px}
+.tag{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:var(--deep2);background:#eaf3e5;border:1px solid #dbe8d4;padding:8px 12px;border-radius:999px}
+.avatar{height:36px;width:36px;border-radius:50%;background:#f2d7c8;display:grid;place-items:center;font-weight:800;color:#714d3e}
+.eyebrow{font-size:11px;letter-spacing:.15em;text-transform:uppercase;font-weight:850;color:#718078}
+.hero{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:26px}
+h1{font-size:clamp(30px,4vw,47px);letter-spacing:-.055em;line-height:1.06;margin:9px 0 10px;font-weight:850}
+.hero p{color:var(--muted);margin:0;max-width:560px;font-size:14px}
+.date-pill{background:#fff;border:1px solid var(--line);padding:12px 15px;border-radius:14px;color:#657169;font-size:12px;font-weight:750;white-space:nowrap}
+.layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(290px,.8fr);gap:22px;align-items:start}
+.maincol,.sidecol{display:grid;gap:20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.word-card{background:var(--deep);color:#fff;padding:26px 28px 24px;position:relative;overflow:hidden;min-height:270px}
+.word-card:after{content:"Aa";position:absolute;right:24px;top:-25px;font-size:170px;font-weight:900;letter-spacing:-.12em;color:rgba(255,255,255,.045);pointer-events:none}
+.word-top{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
+.word-top .eyebrow{color:#b7c9bf}
+.level{background:rgba(255,255,255,.12);color:#dbe9df;border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:6px 10px;font-size:10px;font-weight:800;letter-spacing:.07em}
+.word-title{font-size:clamp(36px,5vw,54px);letter-spacing:-.06em;line-height:1;margin:27px 0 8px;position:relative;z-index:1}
+.phonetic{font-size:13px;color:#c1d1c7;letter-spacing:.04em;position:relative;z-index:1}
+.word-bottom{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:26px;position:relative;z-index:1}
+.word-bottom p{font-size:13px;color:#d2dfd7;margin:0}
+.word-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:0;border-radius:12px;padding:11px 15px;font-size:12px;font-weight:800;transition:transform .15s,background .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn-lime{background:var(--green);color:#1b3025}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.17)}
+.btn-dark{background:var(--deep);color:#fff}
+.btn-white{background:#fff;border:1px solid var(--line);color:var(--deep)}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin:0 0 12px}
+.section-head h2{font-size:16px;letter-spacing:-.03em;margin:0}
+.section-head span{color:var(--muted);font-size:11px}
+.practice{padding:22px 22px 18px}
+.chat-head{display:flex;align-items:center;gap:11px;margin-bottom:16px}
+.botmark{width:38px;height:38px;border-radius:13px;background:#e8f3df;color:var(--deep);display:grid;place-items:center;font-size:17px;font-weight:900}
+.chat-head strong{font-size:13px;display:block}
+.chat-head small{color:var(--muted);font-size:11px}
+.live{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:10px;color:#65826e;font-weight:800}
+.dot{width:7px;height:7px;background:#74c28b;border-radius:50%;box-shadow:0 0 0 4px #e9f5ec}
+.chatbox{background:#f7f8f4;border:1px solid #edf0e9;border-radius:16px;padding:14px;min-height:134px;max-height:230px;overflow:auto;display:flex;flex-direction:column;gap:10px}
+.bubble{font-size:12px;max-width:88%;padding:10px 12px;border-radius:13px;line-height:1.5}
+.bubble.bot{background:#fff;border:1px solid #e9ece5;color:#3b4941;align-self:flex-start;border-top-left-radius:4px}
+.bubble.user{background:#e5f2dc;color:#294333;align-self:flex-end;border-top-right-radius:4px}
+.chat-tools{display:flex;gap:8px;align-items:center;margin-top:12px}
+.text-entry{border:1px solid var(--line);border-radius:12px;padding:12px 13px;outline:none;min-width:0;flex:1;font-size:12px;background:#fff}
+.text-entry:focus{border-color:#9bbd8d;box-shadow:0 0 0 3px #ecf5e7}
+.mic{width:43px;height:43px;border:0;border-radius:13px;background:var(--coral);color:#fff;font-size:17px;font-weight:800;box-shadow:0 5px 15px rgba(238,138,112,.25)}
+.mic.listening{background:#bc5a49;animation:pulse 1.3s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(238,138,112,.16)}}
+.send{height:43px;padding:0 17px}
+.hint{font-size:10px;color:#8a948d;margin:9px 2px 0}
+.practice-prompts{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.prompt{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 10px;font-size:10px;color:#5e6b63;font-weight:700}
+.prompt:hover{background:#f1f6ed}
+.stat-card{padding:20px}
+.stat-top{display:flex;justify-content:space-between;align-items:center}
+.streak-num{font-size:32px;letter-spacing:-.06em;font-weight:850;margin:15px 0 0}
+.stat-sub{font-size:11px;color:var(--muted)}
+.progress-track{height:7px;background:#edf0e9;border-radius:99px;overflow:hidden;margin:15px 0 8px}
+.progress-fill{height:100%;width:0;background:var(--deep2);border-radius:99px;transition:width .3s}
+.progress-note{display:flex;justify-content:space-between;font-size:10px;color:var(--muted)}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:17px}
+.mini-stat{background:#f7f8f4;border:1px solid #edf0e9;border-radius:13px;padding:12px}
+.mini-stat strong{display:block;font-size:19px;letter-spacing:-.04em}
+.mini-stat span{font-size:10px;color:var(--muted)}
+.words{padding:20px}
+.word-list{display:grid;gap:8px}
+.word-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid #f0f1ed}
+.word-row:first-child{border-top:0}
+.word-letter{height:34px;width:34px;border-radius:11px;background:#f3f1e8;display:grid;place-items:center;font-weight:850;font-size:12px;color:#786f53}
+.word-meta{min-width:0;flex:1}
+.word-meta strong{display:block;font-size:12px}
+.word-meta small{display:block;color:var(--muted);font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-listen{border:0;background:#f1f5ee;color:#42604c;border-radius:9px;height:31px;width:31px;font-weight:900}
+.quiz{padding:20px}
+.quiz-question{font-size:14px;font-weight:750;line-height:1.45;margin:12px 0}
+.choices{display:grid;gap:7px}
+.choice{width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:11px;padding:10px 12px;font-size:11px;color:#46534b}
+.choice:hover{border-color:#abc49f;background:#f8fbf5}
+.choice.correct{background:#edf7e8;border-color:#a9c999;color:#2d5a38}
+.choice.wrong{background:#fff0ed;border-color:#efb4a5;color:#8d4033}
+.feedback{min-height:19px;margin-top:9px;font-size:10px;color:#68816e;font-weight:750}
+.footer-note{color:#929c95;font-size:10px;text-align:center;padding:3px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#203c31;color:#fff;border-radius:12px;padding:11px 15px;font-size:12px;box-shadow:var(--shadow);transition:.25s;z-index:9}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+button:focus-visible,input:focus-visible{outline:3px solid #badcaa;outline-offset:2px}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.sidecol{grid-template-columns:1fr 1fr}.hero{align-items:start}.date-pill{margin-top:8px}}
+@media(max-width:580px){.shell{padding:18px 15px 35px}.topbar{margin-bottom:25px}.tag{display:none}.hero{display:block;margin-bottom:20px}.date-pill{display:inline-block}.word-card{padding:22px 20px}.word-bottom{align-items:start;flex-direction:column}.practice{padding:17px}.chat-tools{gap:6px}.send{padding:0 12px}.sidecol{grid-template-columns:1fr}.section-head h2{font-size:15px}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="topbar">
+    <div class="brand"><div class="mark">L</div><div>LEXI<small>VOICE VOCABULARY COACH</small></div></div>
+    <div class="top-right"><div class="tag">Daily language practice</div><div class="avatar" aria-label="Learner profile">A</div></div>
+  </header>
+
+  <section class="hero">
+    <div><div class="eyebrow">Your personal language studio</div><h1>Make every word<br>work for you.</h1><p>Build a sharper vocabulary through short conversations, clear examples, and speaking practice with Lexi.</p></div>
+    <div class="date-pill" id="todayLabel">TODAY · YOUR 5-MINUTE SESSION</div>
+  </section>
+
+  <div class="layout">
+    <main class="maincol">
+      <section class="card word-card" aria-labelledby="wordTitle">
+        <div class="word-top"><div class="eyebrow">WORD OF THE SESSION</div><div class="level" id="wordLevel">INTERMEDIATE</div></div>
+        <div class="word-title" id="wordTitle">Articulate</div>
+        <div class="phonetic" id="phonetic">/ɑːrˈtɪk.jə.lət/ &nbsp;·&nbsp; adjective / verb</div>
+        <div class="word-bottom"><p id="wordTeaser">To express an idea clearly and effectively.</p><div class="word-actions"><button class="btn btn-ghost" id="speakWord">▶ Hear it</button><button class="btn btn-lime" id="nextWord">Next word ↗</button></div></div>
+      </section>
+
+      <section class="card practice">
+        <div class="chat-head"><div class="botmark">✳</div><div><strong>Practice with Lexi</strong><small>Your conversational vocabulary partner</small></div><div class="live"><span class="dot"></span> READY TO TALK</div></div>
+        <div class="chatbox" id="chatbox" aria-live="polite">
+          <div class="bubble bot">Hi! I’m Lexi. Let’s make today’s word stick. Try saying what <b>articulate</b> means, or ask me for an example.</div>
+        </div>
+        <div class="chat-tools"><button class="mic" id="micButton" aria-label="Start voice input" title="Speak to Lexi">●</button><input class="text-entry" id="messageInput" type="text" placeholder="Type a question or your own sentence…" autocomplete="off"><button class="btn btn-dark send" id="sendButton">Send</button></div>
+        <div class="hint" id="voiceHint">Tap the coral button to speak. Microphone access is handled by your browser.</div>
+        <div class="practice-prompts"><button class="prompt" data-prompt="Give me an example">Give me an example</button><button class="prompt" data-prompt="Quiz me">Quiz me</button><button class="prompt" data-prompt="How do I pronounce it?">Pronunciation</button><button class="prompt" data-prompt="Next word">Next word</button></div>
+      </section>
+
+      <section class="card quiz">
+        <div class="section-head"><h2>Quick understanding check</h2><span>1 question · instant feedback</span></div>
+        <div class="quiz-question" id="quizQuestion">What does “articulate” mean?</div>
+        <div class="choices" id="choices"></div>
+        <div class="feedback" id="quizFeedback" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <aside class="sidecol">
+      <section class="card stat-card">
+        <div class="stat-top"><div><div class="eyebrow">YOUR MOMENTUM</div><div class="streak-num"><span id="learnedCount">0</span> <span style="font-size:15px;letter-spacing:0">words</span></div><div class="stat-sub">learned in this browser</div></div><div style="font-size:26px">✦</div></div>
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-note"><span>Session goal</span><strong id="progressLabel">0 / 5 words</strong></div>
+        <div class="stats-grid"><div class="mini-stat"><strong id="quizScore">0%</strong><span>Quiz accuracy</span></div><div class="mini-stat"><strong id="sessionCount">0</strong><span>Words explored</span></div></div>
+      </section>
+
+      <section class="card words">
+        <div class="section-head"><h2>Build your word bank</h2><span>Tap to explore</span></div>
+        <div class="word-list" id="wordList"></div>
+      </section>
+
+      <section class="card" style="padding:16px 18px;background:#f0f4eb;border-color:#e4ebdc;box-shadow:none">
+        <div class="eyebrow" style="color:#617b62">A SMALL TIP</div>
+        <p style="font-size:12px;line-height:1.6;color:#526354;margin:8px 0 0">Use a new word in a sentence about your own day. Personal context makes recall easier than memorising a definition alone.</p>
+      </section>
+    </aside>
+  </div>
+  <div class="footer-note" style="margin-top:22px">LEXI PROTOTYPE · Voice features use your browser’s speech capabilities. Learning progress stays on this device.</div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+const vocabulary = [
+ {word:"Articulate",phonetic:"/ɑːrˈtɪk.jə.lət/ · adjective / verb",level:"INTERMEDIATE",definition:"To express an idea clearly and effectively.",example:"She articulated the product strategy in a way the entire team could understand.",synonyms:["express","communicate","formulate"],choices:["To express an idea clearly","To avoid making a decision","To copy someone else's work"],correct:0},
+ {word:"Pragmatic",phonetic:"/præɡˈmæt.ɪk/ · adjective",level:"INTERMEDIATE",definition:"Focused on practical solutions and real-world results.",example:"We took a pragmatic approach and prioritised the fixes that affected the most users.",synonyms:["practical","realistic","sensible"],choices:["Based only on theory","Focused on practical results","Unwilling to change"],correct:1},
+ {word:"Resilient",phonetic:"/rɪˈzɪl.i.ənt/ · adjective",level:"INTERMEDIATE",definition:"Able to recover, adapt, or keep going after difficulty.",example:"A resilient team learns from a failed launch and improves the next release.",synonyms:["adaptable","tough","resourceful"],choices:["Easily distracted","Able to recover from difficulty","Always in agreement"],correct:1},
+ {word:"Nuanced",phonetic:"/ˈnuː.ɑːnst/ · adjective",level:"ADVANCED",definition:"Showing subtle differences, details, or shades of meaning.",example:"The research gave us a more nuanced understanding of why users were dropping off.",synonyms:["subtle","refined","layered"],choices:["Very simple and obvious","Extremely urgent","Showing subtle distinctions"],correct:2},
+ {word:"Meticulous",phonetic:"/məˈtɪk.jə.ləs/ · adjective",level:"ADVANCED",definition:"Very careful and precise, paying attention to small details.",example:"The analyst was meticulous when validating the event-tracking data.",synonyms:["thorough","precise","careful"],choices:["Careful about every detail","Quick but careless","Unusually confident"],correct:0},
+ {word:"Alleviate",phonetic:"/əˈliː.vi.eɪt/ · verb",level:"INTERMEDIATE",definition:"To make a problem, pain, or difficulty less severe.",example:"A clearer onboarding flow can alleviate confusion for first-time users.",synonyms:["ease","relieve","reduce"],choices:["Make something more difficult","Make a problem less severe","Postpone a decision"],correct:1},
+ {word:"Coherent",phonetic:"/koʊˈhɪr.ənt/ · adjective",level:"INTERMEDIATE",definition:"Logical, clear, and connected in a way that makes sense.",example:"The product brief needs a coherent story from the problem to the proposed solution.",synonyms:["logical","consistent","clear"],choices:["Logical and easy to follow","Unrelated and scattered","Extremely detailed"],correct:0},
+ {word:"Empathetic",phonetic:"/ˌem.pəˈθet̬.ɪk/ · adjective",level:"INTERMEDIATE",definition:"Able to understand and share another person’s feelings or perspective.",example:"An empathetic support response acknowledges the user's frustration before offering a fix.",synonyms:["understanding","considerate","compassionate"],choices:["Focused only on numbers","Able to understand another perspective","Unwilling to listen"],correct:1},
+ {word:"Ubiquitous",phonetic:"/juːˈbɪk.wɪ.təs/ · adjective",level:"ADVANCED",definition:"Present or found almost everywhere.",example:"Mobile notifications are ubiquitous, so relevance matters more than volume.",synonyms:["widespread","omnipresent","prevalent"],choices:["Rare and difficult to find","Present almost everywhere","Newly introduced"],correct:1},
+ {word:"Candid",phonetic:"/ˈkæn.dɪd/ · adjective",level:"INTERMEDIATE",definition:"Honest, direct, and straightforward, even when the truth is difficult.",example:"The team held a candid retrospective about what went wrong in the release.",synonyms:["frank","open","honest"],choices:["Honest and direct","Overly formal","Carefully hidden"],correct:0}
+];
+let currentIndex = 0;
+let explored = new Set(JSON.parse(localStorage.getItem("lexi-explored") || "[]"));
+let learned = new Set(JSON.parse(localStorage.getItem("lexi-learned") || "[]"));
+let quizAttempts = Number(localStorage.getItem("lexi-attempts") || 0);
+let quizCorrect = Number(localStorage.getItem("lexi-correct") || 0);
+let activeRecognition = null;
+let lastAgentLine = "";
+const $ = id => document.getElementById(id);
+const current = () => vocabulary[currentIndex];
+
+function saveProgress(){
+ localStorage.setItem("lexi-explored",JSON.stringify([...explored]));
+ localStorage.setItem("lexi-learned",JSON.stringify([...learned]));
+ localStorage.setItem("lexi-attempts",String(quizAttempts));
+ localStorage.setItem("lexi-correct",String(quizCorrect));
+ updateStats();
+}
+function updateStats(){
+ $("learnedCount").textContent=learned.size;
+ $("sessionCount").textContent=explored.size;
+ const pct=quizAttempts?Math.round(quizCorrect/quizAttempts*100):0;
+ $("quizScore").textContent=pct+"%";
+ $("progressFill").style.width=Math.min(100,learned.size/5*100)+"%";
+ $("progressLabel").textContent=Math.min(learned.size,5)+" / 5 words";
+}
+function notify(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200)}
+function speak(text){
+ if(!("speechSynthesis" in window)){notify("Speech playback is not supported in this browser.");return}
+ window.speechSynthesis.cancel();
+ const utterance=new SpeechSynthesisUtterance(text);
+ utterance.lang="en-IN";utterance.rate=.9;utterance.pitch=1;
+ const voices=window.speechSynthesis.getVoices();
+ const voice=voices.find(v=>/en-IN/i.test(v.lang))||voices.find(v=>/en-GB|en-US/i.test(v.lang));
+ if(voice)utterance.voice=voice;
+ window.speechSynthesis.speak(utterance);
+}
+function addBubble(text,who="bot"){
+ const b=document.createElement("div");b.className="bubble "+who;b.textContent=text;$("chatbox").appendChild(b);$("chatbox").scrollTop=$("chatbox").scrollHeight;
+}
+function botSay(text,voice=true){lastAgentLine=text;addBubble(text,"bot");if(voice)speak(text)}
+function renderWord(){
+ const w=current();
+ $("wordTitle").textContent=w.word;$("phonetic").textContent=w.phonetic;$("wordLevel").textContent=w.level;$("wordTeaser").textContent=w.definition;
+ explored.add(w.word);saveProgress();renderQuiz();renderWordList();
+}
+function nextWord(){
+ currentIndex=(currentIndex+1)%vocabulary.length;renderWord();
+ const w=current();botSay("Your next word is "+w.word+". It means: "+w.definition+" Would you like an example or a quick quiz?");
+}
+function renderWordList(){
+ const list=$("wordList");list.innerHTML="";
+ vocabulary.slice(0,5).forEach((w,i)=>{
+  const row=document.createElement("div");row.className="word-row";
+  const initial=document.createElement("div");initial.className="word-letter";initial.textContent=w.word[0];
+  const meta=document.createElement("div");meta.className="word-meta";
+  const strong=document.createElement("strong");strong.textContent=w.word;
+  const small=document.createElement("small");small.textContent=w.definition;
+  meta.append(strong,small);
+  const listen=document.createElement("button");listen.className="row-listen";listen.textContent="▶";listen.title="Hear "+w.word;listen.addEventListener("click",()=>speak(w.word));
+  row.append(initial,meta,listen);row.addEventListener("click",e=>{if(e.target===listen)return;currentIndex=i;renderWord();botSay("Let's explore "+w.word+". "+w.definition)});
+  list.appendChild(row);
+ });
+}
+function renderQuiz(){
+ const w=current();$("quizQuestion").textContent="What does “"+w.word.toLowerCase()+"” mean?";
+ const choices=$("choices");choices.innerHTML="";$("quizFeedback").textContent="";
+ w.choices.forEach((label,i)=>{
+  const b=document.createElement("button");b.className="choice";b.textContent=String.fromCharCode(65+i)+". "+label;
+  b.addEventListener("click",()=>{
+   [...choices.children].forEach(c=>c.disabled=true);
+   quizAttempts++;
+   if(i===w.correct){quizCorrect++;b.classList.add("correct");$("quizFeedback").textContent="Correct. "+w.word+" means "+w.definition.toLowerCase();learned.add(w.word);saveProgress();botSay("That's right. "+w.word+" means "+w.definition,false)}
+   else{b.classList.add("wrong");choices.children[w.correct].classList.add("correct");$("quizFeedback").textContent="Not quite. The correct answer is: "+w.choices[w.correct]+"." ;saveProgress();botSay("Good attempt. The correct meaning is: "+w.definition,false)}
+  });
+  choices.appendChild(b);
+ });
+}
+function handleMessage(raw){
+ const input=raw.trim();if(!input)return;addBubble(input,"user");$("messageInput").value="";
+ const s=input.toLowerCase(),w=current();
+ if(/next word|another word|next one|move on|skip/.test(s)){nextWord();return}
+ if(/example|sentence|use it|in a sentence/.test(s)){botSay("Here is an example: "+w.example);return}
+ if(/pronounc|say it|how do you say|listen|sound/.test(s)){botSay("Listen to the pronunciation of "+w.word+".",false);speak(w.word);return}
+ if(/quiz|test me|question|practice/.test(s)){botSay("Try this: "+$("quizQuestion").textContent+" Choose one of the answers in the quick check below.");$("choices").scrollIntoView({behavior:"smooth",block:"center"});return}
+ if(/meaning|define|definition|what does/.test(s)){botSay(w.word+" means "+w.definition+" For example: "+w.example);return}
+ if(/synonym|similar word|another word for/.test(s)){botSay("Some useful synonyms for "+w.word+" are "+w.synonyms.join(", ")+".");return}
+ if(/repeat|again/.test(s)){botSay(lastAgentLine);return}
+ const tokens=s.replace(/[^a-z\s]/g," ").split(/\s+/).filter(Boolean);
+ const hit=w.synonyms.some(word=>tokens.includes(word))||tokens.includes(w.word.toLowerCase())||tokens.some(t=>w.definition.toLowerCase().includes(t)&&t.length>4);
+ if(hit){learned.add(w.word);saveProgress();botSay("Good connection. You are using the idea behind "+w.word+" correctly. Try making one sentence of your own with it.");}
+ else if(tokens.length>3){botSay("Thanks for trying that. A useful way to remember "+w.word+" is: "+w.definition+" Now try using it in a sentence about work, learning, or your day.");}
+ else{botSay("I can help with the meaning, an example, pronunciation, synonyms, or a quick quiz. Ask me about "+w.word+" or say “next word”.");}
+}
+function startListening(){
+ const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SpeechRecognition){$("voiceHint").textContent="Voice input is not available here. Use the text box, or try Chrome/Edge with microphone permission.";notify("Voice input is not supported in this browser.");return}
+ if(activeRecognition){activeRecognition.stop();return}
+ const recognition=new SpeechRecognition();activeRecognition=recognition;recognition.lang="en-IN";recognition.interimResults=false;recognition.maxAlternatives=1;
+ $("micButton").classList.add("listening");$("voiceHint").textContent="Listening… speak naturally, then pause.";
+ recognition.onresult=e=>{const transcript=e.results[0][0].transcript;handleMessage(transcript)};
+ recognition.onerror=e=>{$("voiceHint").textContent=e.error==="not-allowed"?"Microphone access was blocked. Enable it in browser settings or type below.":"I couldn't hear that clearly. Try again or use the text box.";};
+ recognition.onend=()=>{$("micButton").classList.remove("listening");$("voiceHint").textContent="Tap the coral button to speak. Microphone access is handled by your browser.";activeRecognition=null};
+ try{recognition.start()}catch(e){activeRecognition=null;$("micButton").classList.remove("listening");$("voiceHint").textContent="Microphone is busy. Try again in a moment."}
+}
+$("speakWord").addEventListener("click",()=>speak(current().word));
+$("nextWord").addEventListener("click",nextWord);
+$("micButton").addEventListener("click",startListening);
+$("sendButton").addEventListener("click",()=>handleMessage($("messageInput").value));
+$("messageInput").addEventListener("keydown",e=>{if(e.key==="Enter")handleMessage($("messageInput").value)});
+document.querySelectorAll("[data-prompt]").forEach(b=>b.addEventListener("click",()=>handleMessage(b.dataset.prompt)));
+$("todayLabel").textContent=new Date().toLocaleDateString("en-IN",{weekday:"short",day:"numeric",month:"short"}).toUpperCase()+" · YOUR 5-MINUTE SESSION";
+renderWord();updateStats();
+</script>
+</body>
+</html>
